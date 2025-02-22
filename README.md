@@ -14,3 +14,17 @@ It consists of two parts:
 
 2. Install WordPress and connect it to a remote MySQL database server. This part of the project
    will solidify your skills of deploying Web and DB tiers of Web solution.
+
+Generally, web, or mobile solutions are implemented based on what is called the **Three-tier Architecture.**
+
+Three-tier Architecture is a client-server software architecture pattern that comprise of 3 separate layers.
+
+In this project will be implementing this solution based on what is called the **Three-tier Architecture.**
+
+**Three-tier Architecture** is a client-server software architecture pattern that comprise of 3 separate layers.
+
+## The 3-Tier Setup
+
+1. A Laptop or PC to serve as a client
+2. An EC2 Linux Server as a web server (This is where you will install WordPress)
+3. An EC2 Linux server as a database (DB) server
