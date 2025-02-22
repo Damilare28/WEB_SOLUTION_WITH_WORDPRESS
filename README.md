@@ -2,8 +2,11 @@
 
 ## Preparing storage infrastructure on two Linux servers and implementing a basic WEB SOLUTION USING WORDPRESS
 
-In this project you will be tasked to prepare storage infrastructure on two Linux servers and implement a basic web solution using WORDPRESS
-WordPress is a free and open-source content management system written in PHP and paired with MySQL or MariaDB as its backend Relational
+### Introdution:
+
+This project involves preparing storage infrastructure on two Linux servers and implement a basic web solution using WORDPRESS.
+
+WORDPRESS is a free and open-source content management system written in PHP and paired with MySQL or MariaDB as its backend Relational
 Database Management System (RDBMS).
 
 It consists of two parts:
@@ -22,6 +25,8 @@ Three-tier Architecture is a client-server software architecture pattern that co
 In this project will be implementing this solution based on what is called the **Three-tier Architecture.**
 
 **Three-tier Architecture** is a client-server software architecture pattern that comprise of 3 separate layers.
+
+### PREREQUISITE
 
 ## The 3-Tier Setup
 
