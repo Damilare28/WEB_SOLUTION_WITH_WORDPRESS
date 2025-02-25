@@ -49,6 +49,22 @@ In this project will be implementing this solution based on what is called the *
 - **Step 5:** Configure DB to work with WordPress
 - **Step 6:** Configure WordPress to connect to remote database.
 
-- **Step 0:** Preparing Prerequisite.
-  Create Two AWS EC2 instances account with Red Hat Enterprise Linux 9.4.
-  ![instances](./web_server_image/instances.png)
+## Step 0: Preparing Prerequisite.
+
+Create Two AWS EC2 instances account with Red Hat Enterprise Linux 9.4.
+
+- A Web Server Instance
+- A DB Server Instance
+
+![instances](./web_server_image/instances.png)
+
+## Step 1: Prepare a Web server
+
+1. In the Web Server EC2, create 3 volumes each of 10GB
+2. Attach all 3 volumes to the Web Server EC2 instance
+
+![Volumes](./web_server_image/webserver%20EBS.png)
+
+3. Inspect the Block devices
+
+   lsblk
