@@ -65,6 +65,6 @@ Create Two AWS EC2 instances account with Red Hat Enterprise Linux 9.4.
 
 ![Volumes](./web_server_image/webserver%20EBS.png)
 
-3. Inspect the Block devices
+3.  Inspect the Block devices
 
-   lsblk
+         lsblk
