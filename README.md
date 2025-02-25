@@ -26,10 +26,29 @@ In this project will be implementing this solution based on what is called the *
 
 **Three-tier Architecture** is a client-server software architecture pattern that comprise of 3 separate layers.
 
-### PREREQUISITE
+## PREREQUISITE
 
-## The 3-Tier Setup
+### The 3-Tier Setup
 
-1. A Laptop or PC to serve as a client
-2. An EC2 Linux Server as a web server (This is where you will install WordPress)
-3. An EC2 Linux server as a database (DB) server
+1. A Laptop or PC to serve as a client.
+2. An EC2 Linux Server as a web server with 3 EBS Volumes: 10GB each(This is where you will install WordPress).
+3. An EC2 Linux server as a database (DB) server with 3 EBS Volumes: 10GB each.
+
+### STEPS
+
+1. Configure storage subsystem for Web and Database servers based on Linux OS.
+2. Install WordPress and connect it to a remote MySQL database server.
+
+## Steps Involved:
+
+- **Step 0:** Preparing Prerequisite. Creating Two AWS EC2 instances account with Red Hat Enterprise Linux 9.4.
+- **Step 1:** Prepare a Web server
+- **Step 2:** Prepare a Database Server
+- **Step 3:** Install Wordpress on the Web Server EC2
+- **Step 4:** Install MySQL on the DB Server EC2
+- **Step 5:** Configure DB to work with WordPress
+- **Step 6:** Configure WordPress to connect to remote database.
+
+- **Step 0:** Preparing Prerequisite.
+  Create Two AWS EC2 instances account with Red Hat Enterprise Linux 9.4.
+  ![instances](./web_server_image/instances.png)
