@@ -67,4 +67,59 @@ Create Two AWS EC2 instances account with Red Hat Enterprise Linux 9.4.
 
 3.  Inspect the Block devices
 
+             lsblk
+
+    ![lsblk](./web_server_image/lsblk.png)
+
+4.  Create a single Partition on each of the 3 disks using gdisk utility
+
+             sudo gdisk /dev/nvme1n1
+             sudo gdisk /dev/nvme2n1
+             sudo gdisk /dev/nvme3n1
+
+![partition](./web_server_image/partition%20nvme1n1.png)
+![partition](./web_server_image/partition%20nvme2n1.png)
+![partition](./web_server_image/partition%20nvme3n1.png)
+
+5.  Use 1sblk utility to view the newly configured partition on each of the 3 disks.
+
          lsblk
+
+![lsblk_partitioned](./web_server_image/partitioned%20lsblk.png)
+
+6. Install Logical Volume Manager 2
+
+LVM2 (Logical Volume Manager version 2) is a storage management system used in Linux to create flexible and scalable disk partitions. It allows you to manage disk space more efficiently compared to traditional partitioning methods.
+
+         sudo yum install lvm2
+
+Run `sudo lvmdiskscan` command to check for available partition
+
+         sudo lvmdiskscan
+
+![lvmdiskscan](./web_server_image/lvmdiskscan.png)
+
+7.  Create Physical Volumes using pvcreate and verify using `sudo pvs`
+
+         sudo pvcreate /dev/nvme1n1 /dev/nvme2n1 /dev/nvme3n1
+
+         sudo pvs
+
+![sudo pvs](./web_server_image/sudo%20pvs.png)
+
+8.  Add all 3 PVs to a volume group (VG) using vgcreate utility. Name the VG **webdata-vg**. Verify it using `sudo vgs`
+
+         sudo vgcreate webdata-vg /dev/nvme3n1p1 /dev/nvme2n1p1 /dev/nvme1n1p1
+
+         sudo vgs
+
+![sudo vgs](./web_server_image/vgs.png)
+
+9.  Craate 2 Logical Volumes **apps-Iv** (Use half of the PV size), and **logs-Iv** Use the remaining space of the PV size. Use `sudo lvs` to verify.
+    _NOTE: apps-lv will be used to store data for the Website while, logs-Iv will be used to store data for logs._
+
+         sudo lvcreate -n apps-lv -L 14G webdata-vg
+         sudo lvcreate -n logs-lv -L 14G webdata-vg
+         sudo lvs
+
+![sudo lvs](./web_server_image/lvs.png)
