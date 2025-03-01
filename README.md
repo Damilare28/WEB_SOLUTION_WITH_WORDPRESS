@@ -180,7 +180,8 @@ Paste the code below
 
 **Mount for word press**
 UUID="4f62026b-9ba3-4e02-9fe3-9890b7cfd6d8" /var/log ext4 defaults 0 0
-UUID="5f266627-8962-4ce4-a41f-b15ce26489a1" /var/www/html ext4 defaults 0 0
+
+      UUID="5f266627-8962-4ce4-a41f-b15ce26489a1" /var/www/html ext4 defaults 0 0
 
 20. Test the configuration and reload the daemon
 
