@@ -123,3 +123,71 @@ Run `sudo lvmdiskscan` command to check for available partition
          sudo lvs
 
 ![sudo lvs](./web_server_image/lvs.png)
+
+10. Verify the entire setup
+
+         sudo vgdisplay -v #view complete setup - VG, PV, and LV
+         sudo 1sblk
+
+![set up](./web_server_image/lsblk%20entire%20setup.png)
+
+11. Use mkfs.ext4 to format the logical volumes with ext4 filesystem
+
+         sudo mkfs -t ext4 /dev/webdata-vg/apps-lv
+         sudo mkfs -t ext4 /dev/webdata-vg/logs-lv
+
+Outcome:
+![ext4 apps_lv](./web_server_image/ext4%20apps-lv.png)
+![ext4 logs_lv](./web_server_image/ext4%20logs-lv.png)
+
+12. Create /var/www/html directory to store website files
+
+         sudo mkdir -p /var/www/html
+
+13. Create /home/recovery/logs to store backup of log data
+
+         sudo mkdir -p /home/recovery/logs
+
+14. Mount /var/www/html on apps-lv logical volume
+
+         sudo mount /dev/webdata-vg/apps-lv /var/www/html/
+
+15. Use rsync utility to backup all the files in the log directory _/var/log_ into _/home/recovery/logs_ (This is required before mounting the filesystem)
+
+         sudo rsync -av /var/log/ /home/recovery/logs/
+
+16. Mount _/var/log_ on _logs-lv_ logical volume. (Note that all the existing data on /var/log will be deleted.)
+
+         sudo mount /dev/webdata-vg/logs-lv /var/log
+
+17. Restore log files back into _/var/log_ directory
+
+         sudo rsync -av /home/recovery/logs/ /var/log
+
+18. Update /etc/fstab file so that the mount configuration will persist after restart of the server.
+
+    The UUID of the device will be used to update the /etc/fstab file;
+
+         sudo blkid
+
+![blkid](./web_server_image/blkid.png)
+
+19. Update /etc/fstab in this format using your own UUID and rememeber to remove the leading and ending quotes.
+
+         sudo vi /etc/fstab
+
+Paste the code below
+
+**Mount for word press**
+UUID="4f62026b-9ba3-4e02-9fe3-9890b7cfd6d8" /var/log ext4 defaults 0 0
+UUID="5f266627-8962-4ce4-a41f-b15ce26489a1" /var/www/html ext4 defaults 0 0
+
+20. Test the configuration and reload the daemon
+
+         sudo mount -a
+
+         sudo systemctl daemon-reload
+
+21. Verify your setup by running df -h, output must look like this:
+
+![output](./web_server_image/df%20-h2.png)
