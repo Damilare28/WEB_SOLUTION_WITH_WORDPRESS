@@ -193,3 +193,179 @@ Paste the code below
 21. Verify your setup by running df -h, output must look like this:
 
 ![output](./web_server_image/df%20-h2.png)
+
+## Step 2: Prepare a Database server
+
+Launch a second RedHat EC2 instance that will have a role - 'DB Server' Repeat the same steps asfor the Web Server, but instead of apps-lv create db-lv and mount it to /db directory instead
+of /var/www/html/.
+
+## Step 3: Install WordPress on the Web Server EC2
+
+### Install Apache httpd
+
+1.  Update the repository
+
+         sudo yum -y update
+
+2.  Install wget, Apache and it's dependencies
+
+         sudo yum -y install wget httpd php php-mysqlnd php-fpm php-json
+
+3.  Start Apache
+
+         sudo systemctl enable httpd
+
+         sudo systemctl start httpd
+
+4.  Check that Apache is running:
+
+         sudo systemctl status httpd
+
+![Apache](./web_server_image/apache%20status.png)
+
+5. Access the web browser: http://your-server-ip
+
+If everything is configured correctly, you should see the default redhat page.
+
+![Redhat](./web_server_image/red%20hat.png)
+
+### Install PHP and it's dependencies
+
+6.  This command installs the EPEL (Extra Packages for Enterprise Linux) repository on a CentOS 8 / RHEL 8.
+
+         sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+
+7.  This command installs the Remi repository and YUM utilities on a CentOS 8 / RHEL 8.
+
+         sudo yum install yum-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+
+8.  Enable the module stream for PHP 8.3:
+
+         sudo yum module switch-to php:remi-8.3
+
+9.  Install the module stream for PHP 8.3 with default extension:
+
+         sudo yum module install php:remi-8.3
+
+10. Install PHP 8.3 and the necessary extensions for WordPress:
+
+         sudo yum install php php-opcache php-gd php-curl php-mysqlnd php-xml php-json php-mbstring php-intl php-soap php-zip
+
+11. Start and enable PHP-FPM:
+
+         sudo systemctl start php-fpm
+
+         sudo systemctl enable php-fpm
+
+### Restart Apache
+
+12. Restart Apache to apply the changes:
+
+         sudo systemctl restart httpd
+
+### Download wordpress and copy wordpress to /var/www/html
+
+13. Install the wget package
+
+         sudo dnf install wget
+
+14. Download the latest version of WordPress:
+
+         sudo wget https://wordpress.org/latest.tar.gz
+
+15. Extract the WordPress archive:
+
+         sudo tar -xzvf latest.tar.gz
+
+         sudo rm latest.tar.gz
+
+16. Move WordPress folder to your Apache web root:
+
+         sudo mv wordpress/ /var/www/html/
+
+### Configure SELinux Policies and Set the correct permissions for the Apache user:
+
+17. Check SELinux Status
+
+Verify that SELinux is enabled and in enforcing mode:
+
+         sestatus
+
+**Expected output:**
+
+![sestatus](./web_server_image/selinux%20status.png)
+
+Set the correct permissions for the Apache user:
+
+         sudo chown -R apache:apache /var/www/html/wordpress
+
+         sudo chmod -R 755 /var/www/html/wordpress
+
+         sudo chcon -t httpd_sys_rw_content_t  /var/www/html/wordpress -Rv
+
+18. Restart Apache to apply the changes:
+
+         sudo systemctl restart httpd
+
+## Step 4: Install MySQL on the DB Server EC2
+
+         sudo yum update
+
+         sudo yum install mysql-server
+
+1.  Start and enable the MySQL service:
+
+         sudo systemctl start mysqld
+
+         sudo systemctl enable mysqld
+
+2.  Verify that the service is up and running by using
+
+         sudo systemctl status mysqld
+
+**Output**
+
+![mysql](./db_server_image/running%20mysql.png)
+
+## Step 5- Configure WordPress to connect to remote database.
+
+Open MySQL port 3306 on DB Server EC2. For extra security, allow access to the DB server ONLY from your Web Server's IP address, so in the Inbound Rule
+configuration specify source as /32
+
+## Step 6- Configure DB to work with WordPress
+
+1.  Create admin user for the wordpress application:
+
+         sudo mysql -u root -p
+
+         CREATE DATABASE wordpress;
+
+         CREATE USER `myuser' @'<Web-Server-Private-IP-Address>` IDENTIFIED BY 'your password';
+
+         GRANT ALL ON wordpress .* TO 'myuser' @'<Web-Server-Private-IP-Address>';
+
+         FLUSH PRIVILEGES;
+
+         SHOW DATABASES;
+
+**Output**
+
+![show database](./db_server_image/show%20database.png)
+
+         exit
+
+### Access the WordPress link from the browser
+
+         http://<Web-Server-Public-IP-Address>/wordpress/
+
+![language page](./web_server_image/wordpress%20language.png)
+![welcome page](./web_server_image/welcome%20wordpress.png)
+
+**Fill out the DB credentials**
+
+![installation](./web_server_image/run%20installation.png)
+![wordpess](./web_server_image/wordpress.png)
+
+## Conclusion
+
+At this point, the infrastructure was set up with WordPress and MySQL on separate EC2 instances, using EBS volumes managed by LVM for flexible storage.
